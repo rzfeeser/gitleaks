@@ -5,9 +5,13 @@ jobs:
     name: gitleaks
     runs-on: ubuntu-latest
     steps:
+      # step 1 - clone the repository with the checkout action
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          ref: ${{ github.head_ref }}   # clone only the branch that triggered the action
+          fetch-depth: 1  # this is how many commits "back" to check with gitleaks
+                          # a value of 0 will check every commit (across all branches - use "ref" to limit"
+      # step 2 - run the gitleaks-action tool against what has been cloned
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
